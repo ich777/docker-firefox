@@ -84,6 +84,9 @@ echo "---Starting noVNC server---"
 websockify -D --web=/usr/share/novnc/ --cert=/etc/ssl/novnc.pem 8080 localhost:5900
 sleep 2
 
+echo "---Container under construction---"
+sleep infinity
+
 echo "---Starting Firefox---"
 cd ${DATA_DIR}
 ${DATA_DIR}/firefox ${EXTRA_PARAMS}
