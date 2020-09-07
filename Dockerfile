@@ -30,7 +30,7 @@ COPY /icons/* /usr/share/novnc/app/images/icons/
 COPY /conf/ /etc/.fluxbox/
 RUN chmod -R 770 /opt/scripts/
 
-EXPOSE 8080 7408 7474
+EXPOSE 8080
 
 #Server Start
 ENTRYPOINT ["/opt/scripts/start.sh"]
