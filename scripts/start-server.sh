@@ -1,51 +1,52 @@
 #!/bin/bash
-export DISPLAY=:99
+CUR_V="$(${DATA_DIR}/firefox --version | cut -d ' ' -f3)"
+if [ "${FIREFOX_V}" == "latest" ]; then
+	LAT_V="$(wget -qO- https://github.com/ich777/versions/raw/master/Firefox | grep LATEST | cut -d '=' -f2)"
+	sleep 2
+	FIREFOX_V="${LAT_V}"
+	if [ -z "$LAT_V" ]; then
+		if [ ! -z "$CUR_V" ]; then
+			echo "---Can't get latest version of Firefox falling back to v$CUR_V---"
+			LAT_V="$CUR_V"
+		else
+			echo "---Something went wrong, can't get latest version of Firefox, putting container into sleep mode---"
+			sleep infinity
+		fi
+	fi
+fi
 
-#CUR_V="$(find ${DATA_DIR} -name instv* | cut -d 'v' -f2 )"
-#LAT_V="$(wget -qO- https://github.com/ich777/versions/raw/master/FlutterCoin | grep LATEST | cut -d '=' -f2)"
-
-#if [ -z "$LAT_V" ]; then
-#	if [ ! -z "$CUR_V" ]; then
-#		echo "---Can't get latest version of FlutterCoin falling back to v$CUR_V---"
-#		LAT_V="$CUR_V"
-#	else
-#		echo "---Something went wrong, can't get latest version of FlutterCoin, putting container into sleep mode---"
-#		sleep infinity
-#	fi
-#fi
-
-#echo "---Version Check---"
-#if [ -z "$CUR_V" ]; then
-#	echo "---FlutterCoin not installed, installing---"
-#   cd ${DATA_DIR}
-#	if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/FlutterCoin-$LAT_V.zip https://github.com/ofeefee/fluttercoin/releases/download/v$LAT_V-flt/fluttercoin-64-linux-v$LAT_V.zip ; then
-#    	echo "---Sucessfully downloaded FlutterCoin---"
-#    else
-#    	echo "---Something went wrong, can't download FlutterCoin, putting container in sleep mode---"
-#        sleep infinity
-#    fi
-#	unzip -o ${DATA_DIR}/FlutterCoin-$LAT_V.zip
-#	rm -R ${DATA_DIR}/FlutterCoin-$LAT_V.zip
-#	touch ${DATA_DIR}/instv$LAT_V
-#elif [ "$CUR_V" != "$LAT_V" ]; then
-#	echo "---Version missmatch, installed v$CUR_V, downloading and installing latest v$LAT_V...---"
-#    cd ${DATA_DIR}
-#	find . -maxdepth 1 -type f -print0 | xargs -0 -I {} rm -R {} 2&>/dev/null
-#	rm -R ${DATA_DIR}/themes 2>/dev/null
-#	if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/FlutterCoin-$LAT_V.zip https://github.com/ofeefee/fluttercoin/releases/download/v$LAT_V-flt/fluttercoin-64-linux-v$LAT_V.zip ; then
-#    	echo "---Sucessfully downloaded FlutterCoin---"
-#    else
-#    	echo "---Something went wrong, can't download FlutterCoin, putting container in sleep mode---"
-#        sleep infinity
-#    fi
-#	unzip -o ${DATA_DIR}/FlutterCoin-$LAT_V.zip
-#	rm -R ${DATA_DIR}/FlutterCoin-$LAT_V.zip
-#	touch ${DATA_DIR}/instv$LAT_V
-#elif [ "$CUR_V" == "$LAT_V" ]; then
-#	echo "---FlutterCoin v$CUR_V up-to-date---"
-#fi
+echo "---Version Check---"
+if [ -z "$CUR_V" ]; then
+	echo "---Firefox not installed, installing---"
+	cd ${DATA_DIR}
+	if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/Firefox-$LAT_V-$FIREFOX_LANG.tar.bz2 "https://download.mozilla.org/?product=firefox-${FIREFOX_V}&os=linux64&lang=${FIREFOX_LANG}" ; then
+		echo "---Sucessfully downloaded Firefox---"
+	else
+		echo "---Something went wrong, can't download Firefox, putting container in sleep mode---"
+		sleep infinity
+	fi
+	tar -C ${DATA_DIR} --strip-components=1 -xf ${DATA_DIR}/Firefox-$LAT_V-$FIREFOX_LANG.tar.bz2
+	rm -R ${DATA_DIR}/Firefox-$LAT_V-$FIREFOX_LANG.tar.bz2
+elif [ "$CUR_V" != "$LAT_V" ]; then
+	echo "---Version missmatch, installed v$CUR_V, downloading and installing latest v$LAT_V...---"
+    cd ${DATA_DIR}
+	find . -maxdepth 1 ! -name profile -exec rm -r {} \; 2>/dev/null
+	if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/Firefox-$LAT_V-$FIREFOX_LANG.tar.bz2 "https://download.mozilla.org/?product=firefox-${FIREFOX_V}&os=linux64&lang=${FIREFOX_LANG}" ; then
+		echo "---Sucessfully downloaded Firefox---"
+	else
+		echo "---Something went wrong, can't download Firefox, putting container in sleep mode---"
+		sleep infinity
+	fi
+	tar -C ${DATA_DIR} --strip-components=1 -xf ${DATA_DIR}/Firefox-$LAT_V-$FIREFOX_LANG.tar.bz2
+	rm -R ${DATA_DIR}/Firefox-$LAT_V-$FIREFOX_LANG.tar.bz2
+elif [ "$CUR_V" == "$LAT_V" ]; then
+	echo "---Firefox v$CUR_V up-to-date---"
+fi
 
 echo "---Preparing Server---"
+if [ ! -d ${DATA_DIR}/profile ]; then
+	mkdir -p ${DATA_DIR}/profile
+fi
 echo "---Resolution check---"
 if [ -z "${CUSTOM_RES_W} ]; then
 	CUSTOM_RES_W=1024
@@ -84,9 +85,6 @@ echo "---Starting noVNC server---"
 websockify -D --web=/usr/share/novnc/ --cert=/etc/ssl/novnc.pem 8080 localhost:5900
 sleep 2
 
-echo "---Container under construction---"
-sleep infinity
-
 echo "---Starting Firefox---"
 cd ${DATA_DIR}
-${DATA_DIR}/firefox ${EXTRA_PARAMS}
+${DATA_DIR}/firefox --display=:99 --profile ${DATA_DIR}/profile --P ${USER} --setDefaultBrowser ${EXTRA_PARAMETERS}
