@@ -1,6 +1,6 @@
 #!/bin/bash
 export DISPLAY=:99
-CUR_V="$(${DATA_DIR}/firefox --version | cut -d ' ' -f3)"
+CUR_V="$(${DATA_DIR}/firefox --version 2>/dev/null | cut -d ' ' -f3)"
 if [ "${FIREFOX_V}" == "latest" ]; then
 	LAT_V="$(wget -qO- https://github.com/ich777/versions/raw/master/Firefox | grep LATEST | cut -d '=' -f2)"
 	sleep 2
