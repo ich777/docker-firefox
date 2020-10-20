@@ -4,9 +4,12 @@ LABEL maintainer="admin@minenet.at"
 
 RUN export TZ=Europe/Rome && \
 	apt-get update && \
-	apt-get -y install --no-install-recommends bzip2 libgtk-3-0 libdbus-glib-1-2 && \
+	apt-get -y install --no-install-recommends bzip2 libgtk-3-0 libdbus-glib-1-2 fonts-takao && \
 	ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
 	echo $TZ > /etc/timezone && \
+	echo "ko_KR.UTF-8 UTF-8" >> /etc/locale.gen && \ 
+	echo "ja_JP.UTF-8 UTF-8" >> /etc/locale.gen && \
+	locale-gen && \
 	rm -rf /var/lib/apt/lists/* && \
 	sed -i '/    document.title =/c\    document.title = "Firefox - noVNC";' /usr/share/novnc/app/ui.js && \
 	rm /usr/share/novnc/app/images/icons/*
