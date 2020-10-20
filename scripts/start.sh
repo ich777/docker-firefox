@@ -20,8 +20,8 @@ chown -R ${UID}:${GID} /opt/scripts
 chown -R ${UID}:${GID} ${DATA_DIR}
 
 term_handler() {
-	kill -SIGTERM "$(pidof firefox)"
-	tail --pid="$(pidof firefox)" -f 2>/dev/null
+	kill -SIGTERM "$killpid"
+	wait "$killpid" -f 2>/dev/null
 	exit 143;
 }
 
