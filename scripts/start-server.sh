@@ -48,6 +48,15 @@ echo "---Preparing Server---"
 if [ ! -d ${DATA_DIR}/profile ]; then
 	mkdir -p ${DATA_DIR}/profile
 fi
+if [ ! -d ${DATA_DIR}/defaults/pref ]; then
+	mkdir -p ${DATA_DIR}/defaults/pref
+fi
+if [ ! -f ${DATA_DIR}/defaults/pref/autoconfig.js ]; then
+	cp /tmp/config/autoconfig.js ${DATA_DIR}/defaults/pref/autoconfig.js
+fi
+if [ ! -f ${DATA_DIR}/mozilla.cfg ]; then
+	cp /tmp/config/mozilla.cfg ${DATA_DIR}/mozilla.cfg
+fi
 echo "---Resolution check---"
 if [ -z "${CUSTOM_RES_W} ]; then
 	CUSTOM_RES_W=1024
