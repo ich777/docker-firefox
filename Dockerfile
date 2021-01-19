@@ -27,12 +27,13 @@ ENV USER="firefox"
 RUN mkdir $DATA_DIR && \
 	useradd -d $DATA_DIR -s /bin/bash $USER && \
 	chown -R $USER $DATA_DIR && \
+	mkdir -p /tmp/config
 	ulimit -n 2048
 
 ADD /scripts/ /opt/scripts/
 COPY /icons/* /usr/share/novnc/app/images/icons/
 COPY /conf/ /etc/.fluxbox/
-COPY /config/ /tmp/
+COPY /config/ /tmp/config/
 RUN chmod -R 770 /opt/scripts/
 
 EXPOSE 8080
