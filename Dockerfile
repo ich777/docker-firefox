@@ -27,7 +27,7 @@ ENV USER="firefox"
 RUN mkdir $DATA_DIR && \
 	useradd -d $DATA_DIR -s /bin/bash $USER && \
 	chown -R $USER $DATA_DIR && \
-	mkdir -p /tmp/config
+	mkdir -p /tmp/config && \
 	ulimit -n 2048
 
 ADD /scripts/ /opt/scripts/
