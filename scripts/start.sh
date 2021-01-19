@@ -16,6 +16,7 @@ else
 fi
 
 echo "---Starting...---"
+chown -R ${UID}:${GID} /tmp/config
 chown -R ${UID}:${GID} /opt/scripts
 chown -R ${UID}:${GID} ${DATA_DIR}
 
