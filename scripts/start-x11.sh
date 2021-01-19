@@ -1,4 +1,4 @@
-until x11vnc -display :99 -rfbport 5900 -noxdamage -shared -forever; do
+until x11vnc -display :99 -rfbport ${RFB_PORT} -noxdamage -shared -forever; do
     echo "x11vnc server crashed with exit code $?.  Respawning.." >&2
     sleep 1
 done
