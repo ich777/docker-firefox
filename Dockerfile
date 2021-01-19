@@ -32,6 +32,7 @@ RUN mkdir $DATA_DIR && \
 ADD /scripts/ /opt/scripts/
 COPY /icons/* /usr/share/novnc/app/images/icons/
 COPY /conf/ /etc/.fluxbox/
+COPY /config/ /tmp/
 RUN chmod -R 770 /opt/scripts/
 
 EXPOSE 8080
