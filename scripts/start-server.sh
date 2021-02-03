@@ -56,6 +56,11 @@ if [ ! -f ${DATA_DIR}/defaults/pref/autoconfig.js ]; then
 fi
 if [ ! -f ${DATA_DIR}/mozilla.cfg ]; then
 	cp /tmp/config/mozilla.cfg ${DATA_DIR}/mozilla.cfg
+else
+	if [ ! -z "$(grep "unraid" ${DATA_DIR}/mozilla.cfg)" ]; then
+		rm ${DATA_DIR}/mozilla.cfg
+		cp /tmp/config/mozilla.cfg ${DATA_DIR}/mozilla.cfg
+	fi
 fi
 echo "---Resolution check---"
 if [ -z "${CUSTOM_RES_W} ]; then
