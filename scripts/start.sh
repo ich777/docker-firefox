@@ -20,7 +20,8 @@ novnccheck
 
 echo "---Starting...---"
 chown -R ${UID}:${GID} /tmp/config
-chown -R ${UID}:${GID} /opt/scripts
+chown -R root:${GID} /opt/scripts
+chmod -R 750 /opt/scripts
 chown -R ${UID}:${GID} ${DATA_DIR}
 
 term_handler() {
