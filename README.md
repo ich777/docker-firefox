@@ -35,7 +35,7 @@ docker run --name Firefox -d \
 	--volume /mnt/cache/appdata/firefox:/firefox \
 	ich777/firefox
 ```
-### Webgui address: http://[SERVERIP]:[PORT]/vnc_auto.html
+### Webgui address: http://[SERVERIP]:[PORT]/vnc.html?autoconnect=true
 
 This Docker was mainly edited for better use with Unraid, if you don't use Unraid you should definitely try it!
 
