@@ -1,49 +1,6 @@
 #!/bin/bash
 export DISPLAY=:99
 export XAUTHORITY=${DATA_DIR}/.Xauthority
-CUR_V="$(${DATA_DIR}/firefox --version 2>/dev/null | cut -d ' ' -f3)"
-if [ "${FIREFOX_V}" == "latest" ]; then
-	LAT_V="$(wget -qO- https://github.com/ich777/versions/raw/master/Firefox | grep LATEST | cut -d '=' -f2)"
-	sleep 2
-	FIREFOX_V="${LAT_V}"
-	if [ -z "$LAT_V" ]; then
-		if [ ! -z "$CUR_V" ]; then
-			echo "---Can't get latest version of Firefox falling back to v$CUR_V---"
-			LAT_V="$CUR_V"
-		else
-			echo "---Something went wrong, can't get latest version of Firefox, putting container into sleep mode---"
-			sleep infinity
-		fi
-	fi
-fi
-
-echo "---Version Check---"
-if [ -z "$CUR_V" ]; then
-	echo "---Firefox not installed, installing---"
-	cd ${DATA_DIR}
-	if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/Firefox-$LAT_V-$FIREFOX_LANG.tar.bz2 "https://download.mozilla.org/?product=firefox-${FIREFOX_V}&os=linux64&lang=${FIREFOX_LANG}" ; then
-		echo "---Sucessfully downloaded Firefox---"
-	else
-		echo "---Something went wrong, can't download Firefox, putting container in sleep mode---"
-		sleep infinity
-	fi
-	tar -C ${DATA_DIR} --strip-components=1 -xf ${DATA_DIR}/Firefox-$LAT_V-$FIREFOX_LANG.tar.bz2
-	rm -R ${DATA_DIR}/Firefox-$LAT_V-$FIREFOX_LANG.tar.bz2
-elif [ "$CUR_V" != "$LAT_V" ]; then
-	echo "---Version missmatch, installed v$CUR_V, downloading and installing latest v$LAT_V...---"
-    cd ${DATA_DIR}
-	find . -maxdepth 1 ! -name profile -exec rm -r {} \; 2>/dev/null
-	if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/Firefox-$LAT_V-$FIREFOX_LANG.tar.bz2 "https://download.mozilla.org/?product=firefox-${FIREFOX_V}&os=linux64&lang=${FIREFOX_LANG}" ; then
-		echo "---Sucessfully downloaded Firefox---"
-	else
-		echo "---Something went wrong, can't download Firefox, putting container in sleep mode---"
-		sleep infinity
-	fi
-	tar -C ${DATA_DIR} --strip-components=1 -xf ${DATA_DIR}/Firefox-$LAT_V-$FIREFOX_LANG.tar.bz2
-	rm -R ${DATA_DIR}/Firefox-$LAT_V-$FIREFOX_LANG.tar.bz2
-elif [ "$CUR_V" == "$LAT_V" ]; then
-	echo "---Firefox v$CUR_V up-to-date---"
-fi
 
 echo "---Preparing Server---"
 if [ ! -d ${DATA_DIR}/profile ]; then
@@ -104,4 +61,4 @@ sleep 2
 
 echo "---Starting Firefox---"
 cd ${DATA_DIR}
-${DATA_DIR}/firefox --display=:99 --profile ${DATA_DIR}/profile --P ${USER} --setDefaultBrowser ${EXTRA_PARAMETERS}
+/usr/bin/firefox-esr --display=:99 --profile ${DATA_DIR}/profile --P ${USER} --setDefaultBrowser ${EXTRA_PARAMETERS}
