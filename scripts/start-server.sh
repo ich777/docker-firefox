@@ -17,6 +17,8 @@ if [ "${FIREFOX_V}" == "latest" ]; then
 	fi
 fi
 
+rm ${DATA_DIR}/Firefox-*.tar.bz2 2>/dev/null
+
 echo "---Version Check---"
 if [ -z "$CUR_V" ]; then
 	echo "---Firefox not installed, installing---"
