@@ -4,7 +4,7 @@ LABEL maintainer="admin@minenet.at"
 
 RUN export TZ=Europe/Rome && \
 	apt-get update && \
-	apt-get -y install --no-install-recommends bzip2 libgtk-3-0 libdbus-glib-1-2 fonts-takao fonts-arphic-uming fonts-noto-cjk firefox-esr && \
+	apt-get -y install --no-install-recommends bzip2 libgtk-3-0 libdbus-glib-1-2 fonts-takao fonts-arphic-uming fonts-noto-cjk firefox-esr ffmpeg && \
 	ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
 	echo $TZ > /etc/timezone && \
 	echo "ko_KR.UTF-8 UTF-8" >> /etc/locale.gen && \ 
