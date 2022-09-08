@@ -34,7 +34,7 @@ if [ -z "$CUR_V" ]; then
 elif [ "$CUR_V" != "$LAT_V" ]; then
 	echo "---Version missmatch, installed v$CUR_V, downloading and installing latest v$LAT_V...---"
     cd ${DATA_DIR}
-	find . -maxdepth 1 ! -name profile -exec rm -r {} \; 2>/dev/null
+	find . -maxdepth 1 ! -name profile ! -name .vnc -exec rm -rf {} \; 2>/dev/null
 	if wget -q -nc --show-progress --progress=bar:force:noscroll -O ${DATA_DIR}/Firefox-$LAT_V-$FIREFOX_LANG.tar.bz2 "https://download.mozilla.org/?product=firefox-${FIREFOX_V}&os=linux64&lang=${FIREFOX_LANG}" ; then
 		echo "---Sucessfully downloaded Firefox---"
 	else
