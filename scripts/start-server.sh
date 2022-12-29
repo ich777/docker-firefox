@@ -1,25 +1,28 @@
 #!/bin/bash
 export DISPLAY=:99
 export XAUTHORITY=${DATA_DIR}/.Xauthority
+
 CUR_V="$(${DATA_DIR}/firefox --version 2>/dev/null | cut -d ' ' -f3)"
-if [ "${FIREFOX_V}" == "latest" ]; then
-	LAT_V="$(wget -qO- https://github.com/ich777/versions/raw/master/Firefox | grep LATEST | cut -d '=' -f2)"
-	sleep 2
-	FIREFOX_V="${LAT_V}"
-	if [ -z "$LAT_V" ]; then
-		if [ ! -z "$CUR_V" ]; then
-			echo "---Can't get latest version of Firefox falling back to v$CUR_V---"
-			LAT_V="$CUR_V"
-		else
-			echo "---Something went wrong, can't get latest version of Firefox, putting container into sleep mode---"
+if [ -z "$CUR_V" ]; then
+	if [ "${FIREFOX_V}" == "latest" ]; then
+		LAT_V="108.0.1"
+	else
+		LAT_V="$FIREFOX_V"
+	fi
+else
+	if [ "${FIREFOX_V}" == "latest" ]; then
+		LAT_V="$CUR_V"
+		if [ -z "$LAT_V" ]; then
+			echo "Something went horribly wrong with version detection, putting container into sleep mode..."
 			sleep infinity
 		fi
+	else
+		LAT_V="$FIREFOX_V"
 	fi
 fi
 
 rm ${DATA_DIR}/Firefox-*.tar.bz2 2>/dev/null
 
-echo "---Version Check---"
 if [ -z "$CUR_V" ]; then
 	echo "---Firefox not installed, installing---"
 	cd ${DATA_DIR}
@@ -43,8 +46,8 @@ elif [ "$CUR_V" != "$LAT_V" ]; then
 	fi
 	tar -C ${DATA_DIR} --strip-components=1 -xf ${DATA_DIR}/Firefox-$LAT_V-$FIREFOX_LANG.tar.bz2
 	rm -R ${DATA_DIR}/Firefox-$LAT_V-$FIREFOX_LANG.tar.bz2
-elif [ "$CUR_V" == "$LAT_V" ]; then
-	echo "---Firefox v$CUR_V up-to-date---"
+#elif [ "$CUR_V" == "$LAT_V" ]; then
+#	echo "---Firefox v$CUR_V up-to-date---"
 fi
 
 echo "---Preparing Server---"
