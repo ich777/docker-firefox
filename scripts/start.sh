@@ -30,7 +30,7 @@ chown -R ${UID}:${GID} ${DATA_DIR}
 
 echo "---Starting...---"
 term_handler() {
-	kill -SIGTERM $(pidof firefox)
+	su ${USER} -c 'export DISPLAY=${DISPLAY:-:99}; wmctrl -l | grep "Firefox" | awk "{print \$1}" | xargs -I {} wmctrl -ic {}'
 	sleep 2
 	tail --pid=$(pidof firefox) -f 2>/dev/null
 	exit 143;
