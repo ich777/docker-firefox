@@ -5,7 +5,7 @@ LABEL org.opencontainers.image.source="https://github.com/ich777/docker-firefox"
 
 RUN export TZ=Europe/Rome && \
 	apt-get update && \
-	apt-get -y install --no-install-recommends bzip2 libgtk-3-0 libdbus-glib-1-2 fonts-takao fonts-arphic-uming fonts-noto-cjk libasound2 ffmpeg && \
+	apt-get -y install --no-install-recommends bzip2 libgtk-3-0 libdbus-glib-1-2 xz-utils fonts-takao fonts-arphic-uming fonts-noto-cjk libasound2 ffmpeg && \
 	ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
 	echo $TZ > /etc/timezone && \
 	echo "ko_KR.UTF-8 UTF-8" >> /etc/locale.gen && \ 
